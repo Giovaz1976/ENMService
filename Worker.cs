@@ -22,7 +22,7 @@ namespace ENMService
                 using NpgsqlConnection sourceConnection = new NpgsqlConnection(sourceConnectionString);
                 sourceConnection.Open();
 
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code = 'XX000'", sourceConnection);
                 using NpgsqlDataReader reader = command.ExecuteReader();
 
                 using NpgsqlConnection destinationConnection = new NpgsqlConnection(destinationConnectionString);
@@ -35,7 +35,7 @@ namespace ENMService
                     while (reader.Read())
                     {
                         // Assuming your destination table has the same structure as the source table
-                        using NpgsqlCommand insertCommand = new NpgsqlCommand("INSERT INTO destination_table VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
+                        using NpgsqlCommand insertCommand = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
                         insertCommand.Parameters.AddWithValue("param1", reader["event_id"]);
                         insertCommand.Parameters.AddWithValue("param2", reader["event_type_id"]);
                         insertCommand.Parameters.AddWithValue("param3", reader["event_level_id"]);
