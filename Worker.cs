@@ -22,7 +22,7 @@ namespace ENMService
                 using NpgsqlConnection sourceConnection = new NpgsqlConnection(sourceConnectionString);
                 sourceConnection.Open();
 
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code = 'XX000'", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('XX000', 'P00001', )", sourceConnection);
                 using NpgsqlDataReader reader = command.ExecuteReader();
 
                 using NpgsqlConnection destinationConnection = new NpgsqlConnection(destinationConnectionString);
