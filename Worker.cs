@@ -31,19 +31,18 @@ namespace ENMService
                 }
 
                 using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('XX000', 'P00001')", sourceConnection);
-                using NpgsqlDataReader reader = command.ExecuteReader();
+                using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 
                 using NpgsqlTransaction transaction = destinationConnection.BeginTransaction();
 
                 try
                 {
-                    while (reader.Read())
+                    while (await reader.ReadAsync())
                     {
                         // Assuming your destination table has the same structure as the source table
 
-                        using NpgsqlCommand insertCommandDel = new NpgsqlCommand("Delete from enm.events_log", destinationConnection);
-
+                        
                         using NpgsqlCommand insertCommandIN = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
                         insertCommandIN.Parameters.AddWithValue("param1", reader["event_id"]);
                         insertCommandIN.Parameters.AddWithValue("param2", reader["event_type_id"]);
@@ -60,7 +59,7 @@ namespace ENMService
                         insertCommandIN.Parameters.AddWithValue("param13", reader["partition_id"]);
                         // Add parameters for all columns
 
-                        insertCommandIN.ExecuteNonQuery();
+                        await insertCommandIN.ExecuteNonQueryAsync();
                     }
 
                     transaction.Commit();
@@ -76,7 +75,7 @@ namespace ENMService
 
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(15000, stoppingToken);
             }
         }
     }
