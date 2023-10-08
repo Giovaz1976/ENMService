@@ -30,7 +30,8 @@ namespace ENMService
                     await deleteCommand.ExecuteNonQueryAsync();
                 }
 
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('XX000', 'P00001')", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001');", sourceConnection);
+                //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000');", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 
