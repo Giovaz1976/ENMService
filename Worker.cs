@@ -43,21 +43,38 @@ namespace ENMService
                     {
                         // Assuming your destination table has the same structure as the source table
 
+                        var rowData = new
+                        {
+                            param1 = reader["event_id"],
+                            param2 = reader["event_type_id"],
+                            param3 = reader["event_level_id"],
+                            param4 = reader["event_system_id"],
+                            param5 = reader["event_module_id"],
+                            param6 = reader["event_object_id"],
+                            param7 = reader["event_datetime_utc"],
+                            param8 = reader["event_datetime"],
+                            param9 = reader["event_offset"],
+                            param10 = reader["event_code"],
+                            param11 = reader["event_message"],
+                            param12 = reader["event_info"],
+                            param13 = reader["partition_id"],
+
+                    };
                         
                         using NpgsqlCommand insertCommandIN = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
-                        insertCommandIN.Parameters.AddWithValue("param1", reader["event_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param2", reader["event_type_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param3", reader["event_level_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param4", reader["event_system_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param5", reader["event_module_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param6", reader["event_object_id"]);
-                        insertCommandIN.Parameters.AddWithValue("param7", reader["event_datetime_utc"]);
-                        insertCommandIN.Parameters.AddWithValue("param8", reader["event_datetime"]);
-                        insertCommandIN.Parameters.AddWithValue("param9", reader["event_offset"]);
-                        insertCommandIN.Parameters.AddWithValue("param10", reader["event_code"]);
-                        insertCommandIN.Parameters.AddWithValue("param11", reader["event_message"]);
-                        insertCommandIN.Parameters.AddWithValue("param12", reader["event_info"]);
-                        insertCommandIN.Parameters.AddWithValue("param13", reader["partition_id"]);
+                        insertCommandIN.Parameters.AddWithValue("param1", rowData.param1);
+                        insertCommandIN.Parameters.AddWithValue("param2", rowData.param2);
+                        insertCommandIN.Parameters.AddWithValue("param3", rowData.param3);
+                        insertCommandIN.Parameters.AddWithValue("param4", rowData.param4);
+                        insertCommandIN.Parameters.AddWithValue("param5", rowData.param5);
+                        insertCommandIN.Parameters.AddWithValue("param6", rowData.param6);
+                        insertCommandIN.Parameters.AddWithValue("param7", rowData.param7);
+                        insertCommandIN.Parameters.AddWithValue("param8", rowData.param8);
+                        insertCommandIN.Parameters.AddWithValue("param9", rowData.param9);
+                        insertCommandIN.Parameters.AddWithValue("param10", rowData.param10);
+                        insertCommandIN.Parameters.AddWithValue("param11", rowData.param11);
+                        insertCommandIN.Parameters.AddWithValue("param12", rowData.param12);
+                        insertCommandIN.Parameters.AddWithValue("param13", rowData.param13);
                         // Add parameters for all columns
 
                         await insertCommandIN.ExecuteNonQueryAsync();
