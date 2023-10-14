@@ -1,15 +1,26 @@
+using Newtonsoft.Json;
 using Npgsql;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json.Serialization;
+using System.Net.Http;
+
+using System.Text;
 
 namespace ENMService
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        public object? rowData;
 
+        //private readonly IHttpClientFactory _httpClientFactory;
+
+        //public Worker(ILogger<Worker> logger, IHttpClientFactory httpClientFactory)
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
+            //_httpClientFactory = httpClientFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -30,7 +41,7 @@ namespace ENMService
                     await deleteCommand.ExecuteNonQueryAsync();
                 }
 
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001');", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000');", sourceConnection);
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000');", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -58,8 +69,14 @@ namespace ENMService
                             param11 = reader["event_message"],
                             param12 = reader["event_info"],
                             param13 = reader["partition_id"],
+                            NotFrom = "emanotmod@gmail.com",
+                            NotTo = "emanotmod@gmail.com",
+                            NotType =  2,
+                            NotState = 1,
+                            NotResponse = 200,
 
-                    };
+
+                        };
                         
                         using NpgsqlCommand insertCommandIN = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
                         insertCommandIN.Parameters.AddWithValue("param1", rowData.param1);
@@ -81,6 +98,30 @@ namespace ENMService
                     }
 
                     transaction.Commit();
+
+                    
+
+                    var payload = JsonConvert.SerializeObject(rowData);
+
+                    //using (var httpClient = _httpClientFactory.CreateClient())
+                    using (var httpClient = new HttpClient())
+                    {
+                        var apiUrl = "https://localhost:5001/EmailSender/api/saveMail/";
+
+                        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+                        var response = await httpClient.PostAsync(apiUrl, content);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            _logger.LogInformation("API POST request succeeded for a row.");
+                        }
+                        else
+                        {
+                            _logger.LogError("API POST request failed with status code: {statusCode} for a row.", response.StatusCode);
+                        }
+                    }
+
                 }
                 catch (Exception ex)
                 {

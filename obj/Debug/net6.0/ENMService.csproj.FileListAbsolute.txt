@@ -45,3 +45,5 @@ C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\refint\ENMService.dll
 C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ENMService.pdb
 C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ENMService.genruntimeconfig.cache
 C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ref\ENMService.dll
+C:\Users\Giovanni\source\repos\ENMService\bin\Debug\net6.0\Microsoft.Extensions.Http.dll
+C:\Users\Giovanni\source\repos\ENMService\bin\Debug\net6.0\Newtonsoft.Json.dll
