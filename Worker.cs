@@ -31,10 +31,10 @@ namespace ENMService
                 string destinationConnectionString = "Server=localhost;Database=enm_db;user id=postgres;Password=nolose;";
 
                 using NpgsqlConnection sourceConnection = new NpgsqlConnection(sourceConnectionString);
-                sourceConnection.Open();
+                await sourceConnection.OpenAsync();
 
                 using NpgsqlConnection destinationConnection = new NpgsqlConnection(destinationConnectionString);
-                destinationConnection.Open();
+                await destinationConnection.OpenAsync();
 
                 using (var deleteCommand = new NpgsqlCommand("DELETE FROM enm.events_log", destinationConnection))
                 {
@@ -46,7 +46,7 @@ namespace ENMService
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 
-                using NpgsqlTransaction transaction = destinationConnection.BeginTransaction();
+                //using NpgsqlTransaction transaction = destinationConnection.BeginTransaction();
 
                 try
                 {
@@ -83,6 +83,7 @@ namespace ENMService
                         rowData.Add("NotResponse", 200);
                         rowData.Add("NotSubject", reader["event_message"]);
                         rowData.Add("NotContent", reader["event_info"]);
+                        rowData.Add("EventId", reader["event_id"]);
                                            
                                               
                         
@@ -110,7 +111,7 @@ namespace ENMService
 
                         var payload = JsonConvert.SerializeObject(rowData);
 
-                        transaction.Commit();
+                        //transaction.Commit();
 
                        
                         using (var httpClient = new HttpClient())
@@ -138,7 +139,7 @@ namespace ENMService
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    //transaction.Rollback();
                     Console.WriteLine("Error: " + ex.Message);
                 }
 
