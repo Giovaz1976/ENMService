@@ -12,24 +12,28 @@ namespace ENMService
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        
-                      
+
+        private System.Threading.Timer validationTimer;
+
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
-            
+            validationTimer = new System.Threading.Timer(PerformValidation, null, TimeSpan.Zero, TimeSpan.FromMinutes(10));
+
+
         }
 
-       
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             
             
             while (!stoppingToken.IsCancellationRequested)
             {
-                string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
-                //string sourceConnectionString = "Server=localhost;Database=smc;user id=postgres;Password=nolose;";
+                //string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
+                string sourceConnectionString = "Server=localhost;Database=smc;user id=postgres;Password=nolose;";
                 string destinationConnectionString = "Server=localhost;Database=enm_db;user id=postgres;Password=nolose;";
+               
 
                 using NpgsqlConnection sourceConnection = new NpgsqlConnection(sourceConnectionString);
                 await sourceConnection.OpenAsync();
@@ -153,7 +157,24 @@ namespace ENMService
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
                 await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
                 //await Task.Delay(15000, stoppingToken);
+                
             }
         }
+
+
+
+        private void PerformValidation(object? state)
+        {
+            try
+            {
+               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Validation error: {error}", ex.Message);
+            }
+        }
+
+       
     }
 }
