@@ -52,7 +52,7 @@ namespace ENMService
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
                 
-                //using NpgsqlTransaction transaction = destinationConnection.BeginTransaction();
+              
 
                 try
                 {
@@ -90,9 +90,9 @@ namespace ENMService
                         rowData.Add("NotSubject", reader["event_message"]);
                         rowData.Add("NotContent", reader["event_info"]);
                         rowData.Add("EventId", reader["event_id"]);
-                                           
-                                              
-                        
+
+
+                        // Adding parameters for all columns
 
                         using NpgsqlCommand insertCommandIN = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
 						//using var updateCommand = new NpgsqlCommand("UPDATE enm.tab_notifications SET not_state = 1 WHERE id = @id", sourceConnectionString);
@@ -111,13 +111,13 @@ namespace ENMService
                         insertCommandIN.Parameters.AddWithValue("param13", rowData["param13"]);
 
                                              
-                        // Add parameters for all columns
+                        
 
                         await insertCommandIN.ExecuteNonQueryAsync();
 
                         var payload = JsonConvert.SerializeObject(rowData);
 
-                        //transaction.Commit();
+                       
 
                        
                         using (var httpClient = new HttpClient())
@@ -125,7 +125,7 @@ namespace ENMService
                             var apiUrl = "https://localhost:5001/EmailSender/api/saveMail/";
 
                             var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                            //var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                           
 
                             var response = await httpClient.PostAsync(apiUrl, content);
 
@@ -145,7 +145,7 @@ namespace ENMService
                 }
                 catch (Exception ex)
                 {
-                    //transaction.Rollback();
+                   
                     Console.WriteLine("Error: " + ex.Message);
                 }
 
