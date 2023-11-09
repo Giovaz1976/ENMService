@@ -30,8 +30,8 @@ namespace ENMService
             
             while (!stoppingToken.IsCancellationRequested)
             {
-                //string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
-                string sourceConnectionString = "Server=localhost;Database=smc;user id=postgres;Password=nolose;";
+                string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
+                //string sourceConnectionString = "Server=localhost;Database=smc;user id=postgres;Password=nolose;";
                 string destinationConnectionString = "Server=localhost;Database=enm_db;user id=postgres;Password=nolose;";
                
 
@@ -47,7 +47,7 @@ namespace ENMService
                 }
 
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000');", sourceConnection);
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('99401','XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime AT TIME ZONE 'CST7CDT' BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('99401','XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime AT TIME ZONE 'CST7CDT' BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -122,7 +122,7 @@ namespace ENMService
                        
                         using (var httpClient = new HttpClient())
                         {
-                            var apiUrl = "https://localhost:5001/EmailSender/api/saveMail/";
+                            var apiUrl = "http://localhost:5000/EmailSender/api/saveMail/";
 
                             var content = new StringContent(payload, Encoding.UTF8, "application/json");
                            
