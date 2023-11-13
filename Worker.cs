@@ -56,13 +56,13 @@ namespace ENMService
 
                 try
                 {
-                    
+
                     while (await reader.ReadAsync())
                     {
                         // Assuming destination table has the same structure as the source table
 
 
-                        var rowData = new Dictionary<string, object> 
+                        var rowData = new Dictionary<string, object>
                         {
 
                        {"param1" , reader["event_id"] },
@@ -83,7 +83,7 @@ namespace ENMService
 
                         };
                         rowData.Add("NotFrom", "emanotmod@gmail.com");
-                        rowData.Add("NotTo", "emanotmod@gmail.com");
+                        rowData.Add("NotTo", "juan.leon@evoluciona.cl");
                         rowData.Add("NotType", 2);
                         rowData.Add("NotState", 1);
                         rowData.Add("NotResponse", 200);
