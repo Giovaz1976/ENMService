@@ -47,3 +47,4 @@ C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ENMService.genruntime
 C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ref\ENMService.dll
 C:\Users\Giovanni\source\repos\ENMService\bin\Debug\net6.0\Microsoft.Extensions.Http.dll
 C:\Users\Giovanni\source\repos\ENMService\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Giovanni\source\repos\ENMService\obj\Debug\net6.0\ENMService.sourcelink.json
