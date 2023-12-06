@@ -35,18 +35,10 @@ namespace ENMService
 
                 using enm_dbContext db = new();
 
-                var source = (from r in db.TabConfs select r.ConnReadConf).FirstOrDefault();
-                var destination = (from d in db.TabConfs select d.ConnInsertConf).FirstOrDefault();
-                var interval = (from i in db.TabConfs select i.ConnInsertConf).FirstOrDefault();
-
-                
-
-                //string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
-                string sourceConnectionString = source;
-                string destinationConnectionString = destination;
-                string intevalConn = interval;
-
-
+                var sourceConnectionString = (from r in db.TabConfs select r.ConnReadConf).FirstOrDefault();
+                var destinationConnectionString = (from d in db.TabConfs select d.ConnInsertConf).FirstOrDefault();
+                var intevalConn = (from i in db.TabConfs select i.ConnInsertConf).FirstOrDefault();
+                              
 
                 using NpgsqlConnection sourceConnection = new NpgsqlConnection(sourceConnectionString);
                 await sourceConnection.OpenAsync();
