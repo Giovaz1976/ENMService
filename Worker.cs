@@ -156,7 +156,7 @@ namespace ENMService
 
                 sourceConnection.Close();
                 destinationConnection.Close();
-
+                this.Dispose();
 
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
@@ -169,6 +169,7 @@ namespace ENMService
                     await Task.Delay(TimeSpan.FromMinutes(resumeInterval), stoppingToken);
                 }
 
+                
                 intervalConnection.Close();
                 //await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
                 //await Task.Delay(15000, stoppingToken);
