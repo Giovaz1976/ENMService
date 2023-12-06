@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http;
-
+using ENMService.Models.Request;
 using System.Text;
+using ENMService.Models;
+using System.Linq;
 
 namespace ENMService
 {
@@ -30,8 +32,15 @@ namespace ENMService
             
             while (!stoppingToken.IsCancellationRequested)
             {
-                string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
-                //string sourceConnectionString = "Server=localhost;Database=smc;user id=postgres;Password=nolose;";
+
+                using enm_dbContext db = new();
+
+                var source = (from r in db.TabConfs select r.ConnReadConf).FirstOrDefault();
+
+                
+
+                //string sourceConnectionString = "Server=localhost;Port=5436;Database=cl.qfree.zen_0.0.9_202308;user id=qfree;Password=123456;";
+                string sourceConnectionString = source;
                 string destinationConnectionString = "Server=localhost;Database=enm_db;user id=postgres;Password=nolose;";
                 string intevalConn = "Server=localhost;Database=enm_db;user id=postgres;Password=nolose;";
 
