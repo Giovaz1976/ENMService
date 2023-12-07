@@ -19,5 +19,6 @@ namespace ENMService.Models
         public DateTime UpdateTimeConf { get; set; }
         public string ConnInsertConf { get; set; } = null!;
         public string ConnResumeConf { get; set; } = null!;
+        public int? ReadIntervalResume { get; set; }
     }
 }

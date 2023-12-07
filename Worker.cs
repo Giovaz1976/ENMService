@@ -163,14 +163,42 @@ namespace ENMService
 
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
-                var Intervalcommand = new NpgsqlCommand("SELECT resume_interval_resume FROM enm.tab_conf", intervalConnection);
+                
+                
+                var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();
+
+
+                try
                 {
+                    if (resumeInterval.HasValue && resumeInterval.Value > 0)
+                    {
+                        await Task.Delay(TimeSpan.FromMinutes(resumeInterval.Value), stoppingToken);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"resume interval is null. Check Conf Table: {DateTimeOffset.Now}");
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    Console.WriteLine("Error: " + ex.Message); 
+                }
+                
                     
-                    var resumeInterval = (int)Intervalcommand.ExecuteScalar();
+               
+
+                         
+                
+                
+                //var Intervalcommand = new NpgsqlCommand("SELECT resume_interval_resume FROM enm.tab_conf", intervalConnection);
+                //{
+                    
+                //    var resumeInterval = (int)Intervalcommand.ExecuteScalar();
 
                     
-                    await Task.Delay(TimeSpan.FromMinutes(resumeInterval), stoppingToken);
-                }
+                //    await Task.Delay(TimeSpan.FromMinutes(resumeInterval), stoppingToken);
+                //}
 
                 
                 intervalConnection.Close();

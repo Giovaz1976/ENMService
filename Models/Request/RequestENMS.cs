@@ -22,5 +22,6 @@ namespace ENMService.Models.Request
         public DateTime UpdateTimeConf { get; set; }
         public string? ConnInsertConf { get; set; }
         public string? ConnResumeConf { get; set; }
+        public int? ReadIntervalResume { get; set; }
     }
 }

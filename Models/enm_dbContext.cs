@@ -167,6 +167,8 @@ namespace ENMService.Models
 
                 entity.Property(e => e.ReadIntervalConf).HasColumnName("read_interval_conf");
 
+                entity.Property(e => e.ReadIntervalResume).HasColumnName("read_interval_resume");
+
                 entity.Property(e => e.ResumeIntervalResume).HasColumnName("resume_interval_resume");
 
                 entity.Property(e => e.SmtpConf).HasColumnName("smtp_conf");

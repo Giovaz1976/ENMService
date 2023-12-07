@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ENMService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d23cf13119a1366922278ea60f19996dd601857f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6941da459ae333e14e4db3329e290e1a35e92bf9")]
 [assembly: System.Reflection.AssemblyProductAttribute("ENMService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ENMService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
