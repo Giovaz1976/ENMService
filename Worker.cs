@@ -54,7 +54,7 @@ namespace ENMService
                     await deleteCommand.ExecuteNonQueryAsync();
                 }
 
-                //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000');", sourceConnection);
+                
                 using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('99401','XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime AT TIME ZONE 'CST7CDT' BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
@@ -159,49 +159,47 @@ namespace ENMService
 
                 sourceConnection.Close();
                 destinationConnection.Close();
-                this.Dispose();
+                //this.Dispose();
 
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
                 
                 
-                var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();
-
-
+                var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();                
                 try
                 {
-                    if (resumeInterval.HasValue && resumeInterval.Value > 0)
-                    {
+                    if (resumeInterval.HasValue && resumeInterval.Value > 0)                    
                         await Task.Delay(TimeSpan.FromMinutes(resumeInterval.Value), stoppingToken);
-                    }
-                    else
-                    {
+                    
+                    else                    
                         Console.WriteLine($"resume interval is null. Check Conf Table: {DateTimeOffset.Now}");
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
 
                     Console.WriteLine("Error: " + ex.Message); 
                 }
-                
-                    
-               
 
-                         
-                
-                
+                _logger.LogInformation("Waiting execution interval: {time}", DateTimeOffset.Now);
+
+
+
+
+
+
                 //var Intervalcommand = new NpgsqlCommand("SELECT resume_interval_resume FROM enm.tab_conf", intervalConnection);
                 //{
-                    
+
                 //    var resumeInterval = (int)Intervalcommand.ExecuteScalar();
 
-                    
+
                 //    await Task.Delay(TimeSpan.FromMinutes(resumeInterval), stoppingToken);
                 //}
 
-                
+
                 intervalConnection.Close();
+
                 //await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
                 //await Task.Delay(15000, stoppingToken);
 
@@ -209,18 +207,6 @@ namespace ENMService
         }
 
 
-
-        //private void PerformValidation(object? state)
-        //{
-        //    try
-        //    {
-               
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError("Validation error: {error}", ex.Message);
-        //    }
-        //}
 
        
     }
