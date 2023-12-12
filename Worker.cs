@@ -164,24 +164,31 @@ namespace ENMService
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
                 
-                
+
+
                 var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();                
                 try
                 {
-                    if (resumeInterval.HasValue && resumeInterval.Value > 0)                    
-                        await Task.Delay(TimeSpan.FromMinutes(resumeInterval.Value), stoppingToken);
-                    
-                    else                    
+
+                    _logger.LogInformation("Waiting execution interval: {mins}, {time}", DateTimeOffset.Now, resumeInterval + " " + "minute(s)");
+
+                    if (resumeInterval.HasValue && resumeInterval.Value > 0)
+                    {
+                        await Task.Delay(TimeSpan.FromMinutes(resumeInterval.Value), stoppingToken);      
+                    }
+                    else
+                    {
                         Console.WriteLine($"resume interval is null. Check Conf Table: {DateTimeOffset.Now}");
+                    }                    
+                       
                     
                 }
                 catch (Exception ex)
                 {
-
                     Console.WriteLine("Error: " + ex.Message); 
                 }
 
-                _logger.LogInformation("Waiting execution interval: {time}", DateTimeOffset.Now);
+                
 
 
 
