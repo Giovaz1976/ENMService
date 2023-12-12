@@ -8,6 +8,7 @@ using ENMService.Models.Request;
 using System.Text;
 using ENMService.Models;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace ENMService
 {
@@ -20,8 +21,6 @@ namespace ENMService
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
-            //validationTimer = new System.Threading.Timer(PerformValidation, null, TimeSpan.Zero, TimeSpan.FromMinutes(10));
-
 
         }
 
@@ -54,8 +53,11 @@ namespace ENMService
                     await deleteCommand.ExecuteNonQueryAsync();
                 }
 
+                var readSelectConf = (from rs in db.TabConfs select rs.ReadIntervalConf).FirstOrDefault();
+                string selectConf = readSelectConf.ToString();
+                var commandString = $@"SELECT * FROM events.events_log where event_code in ('99401','XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime BETWEEN CURRENT_TIMESTAMP - INTERVAL '{selectConf} minutes' AND CURRENT_TIMESTAMP;";
                 
-                using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code in ('99401','XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
+                using NpgsqlCommand command = new NpgsqlCommand(commandString, sourceConnection);
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime AT TIME ZONE 'CST7CDT' BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -188,21 +190,6 @@ namespace ENMService
                     Console.WriteLine("Error: " + ex.Message); 
                 }
 
-                
-
-
-
-
-
-
-                //var Intervalcommand = new NpgsqlCommand("SELECT resume_interval_resume FROM enm.tab_conf", intervalConnection);
-                //{
-
-                //    var resumeInterval = (int)Intervalcommand.ExecuteScalar();
-
-
-                //    await Task.Delay(TimeSpan.FromMinutes(resumeInterval), stoppingToken);
-                //}
 
 
                 intervalConnection.Close();
