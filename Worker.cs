@@ -22,13 +22,10 @@ namespace ENMService
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
-
         }
-
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            
             
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -62,9 +59,6 @@ namespace ENMService
                 //using NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM events.events_log where event_code  <> '99401' and event_code in ('XX000','P0001','99999','99480','99409','99403','99400','42P01','42883','42846','42809','42804','42803','42704','42703','42702','42601','3F000','2D000','23505','22P02','22023','22012','22007','22004','22003','22001','21000','0A000') AND event_datetime AT TIME ZONE 'CST7CDT' BETWEEN CURRENT_TIMESTAMP - INTERVAL '10 minutes' AND CURRENT_TIMESTAMP;", sourceConnection);
                 using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
-                
-              
-
                 try
                 {
 
@@ -91,8 +85,6 @@ namespace ENMService
                        {"param12" , reader["event_info"] },
                        {"param13" , reader["partition_id"] },
 
-
-
                         };
                         rowData.Add("NotFrom", _notFrom);
                         rowData.Add("NotTo", _notto);
@@ -107,7 +99,7 @@ namespace ENMService
                         // Adding parameters for all columns
 
                         using NpgsqlCommand insertCommandIN = new NpgsqlCommand("INSERT INTO enm.events_log VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8, @param9, @param10, @param11, @param12, @param13)", destinationConnection);
-						//using var updateCommand = new NpgsqlCommand("UPDATE enm.tab_notifications SET not_state = 1 WHERE id = @id", sourceConnectionString);
+					
                         insertCommandIN.Parameters.AddWithValue("param1", rowData["param1"]);
                         insertCommandIN.Parameters.AddWithValue("param2", rowData["param2"]);
                         insertCommandIN.Parameters.AddWithValue("param3", rowData["param3"]);
@@ -122,22 +114,16 @@ namespace ENMService
                         insertCommandIN.Parameters.AddWithValue("param12", rowData["param12"]);
                         insertCommandIN.Parameters.AddWithValue("param13", rowData["param13"]);
 
-                                             
-                        
 
                         await insertCommandIN.ExecuteNonQueryAsync();
 
                         var payload = JsonConvert.SerializeObject(rowData);
 
-                       
-
-                       
                         using (var httpClient = new HttpClient())
                         {
                             var apiUrl = "http://localhost:5000/EmailSender/api/saveMail/";
 
                             var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                           
 
                             var response = await httpClient.PostAsync(apiUrl, content);
 
@@ -151,7 +137,6 @@ namespace ENMService
                             }
                         }
                     }
-
                     
 
                 }
@@ -163,12 +148,8 @@ namespace ENMService
 
                 sourceConnection.Close();
                 destinationConnection.Close();
-                //this.Dispose();
-
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
-                
-
 
                 var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();                
                 try
@@ -183,8 +164,7 @@ namespace ENMService
                     else
                     {
                         Console.WriteLine($"resume interval is null. Check Conf Table: {DateTimeOffset.Now}");
-                    }                    
-                       
+                    }     
                     
                 }
                 catch (Exception ex)
@@ -192,10 +172,7 @@ namespace ENMService
                     Console.WriteLine("Error: " + ex.Message); 
                 }
 
-
-
                 intervalConnection.Close();
-
                 //await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
                 //await Task.Delay(15000, stoppingToken);
 
