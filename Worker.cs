@@ -121,7 +121,9 @@ namespace ENMService
 
                         using (var httpClient = new HttpClient())
                         {
-                            var apiUrl = "http://localhost:5000/EmailSender/api/saveMail/";
+                            var apistr = (from api in db.TabConfs select api.ApiRoot).FirstOrDefault();
+                            
+                            var apiUrl = apistr;
 
                             var content = new StringContent(payload, Encoding.UTF8, "application/json");
 
@@ -178,8 +180,6 @@ namespace ENMService
 
             }
         }
-
-
 
        
     }

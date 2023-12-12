@@ -20,5 +20,6 @@ namespace ENMService.Models
         public string ConnInsertConf { get; set; } = null!;
         public string ConnResumeConf { get; set; } = null!;
         public int? ReadIntervalResume { get; set; }
+        public string? ApiRoot { get; set; }
     }
 }

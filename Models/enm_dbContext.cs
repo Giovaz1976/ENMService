@@ -142,6 +142,8 @@ namespace ENMService.Models
 
                 entity.ToTable("tab_conf", "enm");
 
+                entity.Property(e => e.ApiRoot).HasColumnName("api_root");
+
                 entity.Property(e => e.ConfFrom)
                     .HasMaxLength(128)
                     .HasColumnName("conf_from");
