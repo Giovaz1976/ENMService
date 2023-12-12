@@ -9,6 +9,7 @@ using System.Text;
 using ENMService.Models;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Data.Common;
 
 namespace ENMService
 {
@@ -16,7 +17,7 @@ namespace ENMService
     {
         private readonly ILogger<Worker> _logger;
 
-        //private System.Threading.Timer validationTimer;
+        
 
         public Worker(ILogger<Worker> logger)
         {
@@ -70,7 +71,8 @@ namespace ENMService
                     while (await reader.ReadAsync())
                     {
                         // Assuming destination table has the same structure as the source table
-
+                        var _notFrom = (from nf in db.TabConfs select nf.ConfFrom).FirstOrDefault();
+                        var _notto = (from nt in db.TabConfs select nt.ToConf).FirstOrDefault();
 
                         var rowData = new Dictionary<string, object>
                         {
@@ -92,8 +94,8 @@ namespace ENMService
 
 
                         };
-                        rowData.Add("NotFrom", "emanotmod@gmail.com");
-                        rowData.Add("NotTo", "juan.leon@evoluciona.cl");
+                        rowData.Add("NotFrom", _notFrom);
+                        rowData.Add("NotTo", _notto);
                         rowData.Add("NotType", 2);
                         rowData.Add("NotState", 1);
                         rowData.Add("NotResponse", 200);
