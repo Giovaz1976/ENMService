@@ -64,7 +64,6 @@ namespace ENMService
 
                     while (await reader.ReadAsync())
                     {
-                        // Assuming destination table has the same structure as the source table
                         var _notFrom = (from nf in db.TabConfs select nf.ConfFrom).FirstOrDefault();
                         var _notto = (from nt in db.TabConfs select nt.ToConf).FirstOrDefault();
 
