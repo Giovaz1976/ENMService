@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http;
-using ENMService.Models.Request;
+using ENMService.Models.Request;    
 using System.Text;
 using ENMService.Models;
 using System.Linq;
@@ -88,8 +88,8 @@ namespace ENMService
                         rowData.Add("NotFrom", _notFrom);
                         rowData.Add("NotTo", _notto);
                         rowData.Add("NotType", 2);
-                        rowData.Add("NotState", 1);
-                        rowData.Add("NotResponse", 200);
+                        rowData.Add("NotState", 3);
+                        rowData.Add("NotResponse", 404);
                         rowData.Add("NotSubject", reader["event_message"]);
                         rowData.Add("NotContent", reader["event_info"]);
                         rowData.Add("EventId", reader["event_id"]);
@@ -120,7 +120,7 @@ namespace ENMService
 
                         using (var httpClient = new HttpClient())
                         {
-                            var apistr = (from api in db.TabConfs select api.ApiRoot).FirstOrDefault();
+                            var apistr = (from api in db.TabConfs select api.ApiRoot).FirstOrDefault(); 
                             
                             var apiUrl = apistr;
 
@@ -144,7 +144,7 @@ namespace ENMService
                 catch (Exception ex)
                 {
                    
-                    Console.WriteLine("Error: " + ex.Message);
+                    Console.WriteLine("Error, Impossible to Send this request to server. Check APIS avaibility: " + ex.Message);
                 }
 
                 sourceConnection.Close();
@@ -152,7 +152,8 @@ namespace ENMService
 
                 _logger.LogInformation("Table copy operation completed: {time}", DateTimeOffset.Now);
 
-                var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();                
+                var resumeInterval = (from ri in db.TabConfs select ri.ReadIntervalResume).FirstOrDefault();
+                
                 try
                 {
 
@@ -171,6 +172,7 @@ namespace ENMService
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error: " + ex.Message); 
+                   
                 }
 
                 intervalConnection.Close();
