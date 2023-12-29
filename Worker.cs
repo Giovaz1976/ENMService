@@ -157,9 +157,9 @@ namespace ENMService
                 try
                 {
 
-                    _logger.LogInformation("Waiting execution interval: {mins}, {time}", DateTimeOffset.Now, resumeInterval + " " + "minute(s)");
+                    _logger.LogInformation("Waiting execution interval: {mins}, {time}", DateTimeOffset.Now, resumeInterval.ToString() + " " + "minute(s)");
 
-                    if (resumeInterval.HasValue && resumeInterval.Value > 0)
+                    if (resumeInterval > 0)
                     {
                         await Task.Delay(TimeSpan.FromMinutes(resumeInterval.Value), stoppingToken);      
                     }
@@ -171,7 +171,7 @@ namespace ENMService
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error: " + ex.Message); 
+                    Console.WriteLine("Error ocurred during execution: " + ex.Message); 
                    
                 }
 
