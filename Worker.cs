@@ -171,7 +171,7 @@ namespace ENMService
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error ocurred during execution: " + ex.Message); 
+                    Console.WriteLine("An Error ocurred during execution: " + ex.Message); 
                    
                 }
 
